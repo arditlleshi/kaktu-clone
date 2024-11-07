@@ -79,7 +79,7 @@ const Sidebar = () => {
             <Cpu className="w-6 h-6 text-white animate-pulse-slow" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 text-transparent bg-clip-text">
-            KaKtu<span className="font-normal">AI</span>
+            KaKtu<span className="font-normal"> AI</span>
           </span>
         </div>
 

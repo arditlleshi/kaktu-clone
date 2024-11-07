@@ -1,4 +1,3 @@
-import React from 'react';
 import { Search, Menu, Video, Bell, User, Mic } from 'lucide-react';
 
 const Header = () => {
