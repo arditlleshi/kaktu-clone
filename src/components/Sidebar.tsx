@@ -26,7 +26,12 @@ interface ChatHistory {
   type: 'quantum' | 'neural' | 'standard';
 }
 
-const Sidebar = () => {
+interface SidebarProps {
+  onPageChange: (page: 'chat' | 'alerts' | 'saved') => void;
+  currentPage: 'chat' | 'alerts' | 'saved';
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
   const [activeSection, setActiveSection] = useState<'recent' | 'saved'>('recent');
 
   const recentChats: ChatHistory[] = [
@@ -79,11 +84,17 @@ const Sidebar = () => {
             <Cpu className="w-6 h-6 text-white animate-pulse-slow" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 text-transparent bg-clip-text">
-            KaKtu<span className="font-normal"> AI</span>
+            KaKtu<span className="font-normal">AI</span>
           </span>
         </div>
 
-        <button className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all hover:-translate-y-0.5">
+        <button 
+          onClick={() => onPageChange('chat')}
+          className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl shadow-lg transition-all
+            ${currentPage === 'chat' 
+              ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40' 
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+        >
           <MessageSquarePlus className="w-5 h-5" />
           <span className="font-medium">New Search</span>
         </button>
@@ -142,6 +153,7 @@ const Sidebar = () => {
           {recentChats.map((chat) => (
             <button
               key={chat.id}
+              onClick={() => onPageChange('chat')}
               className="w-full px-3 py-3 text-left hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl transition-all hover:shadow-sm group"
             >
               <div className="flex items-start space-x-3">
@@ -169,17 +181,33 @@ const Sidebar = () => {
               PRO
             </span>
           </button>
-          <button className="w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl group transition-colors">
+          <button 
+            onClick={() => onPageChange('alerts')}
+            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
+              ${currentPage === 'alerts'
+                ? 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10'
+                : 'hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50'}`}
+          >
             <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md group-hover:shadow-lg transition-all">
               <Bell className="w-4 h-4" />
             </div>
-            <span className="text-gray-700">Property Alerts</span>
+            <span className={`${currentPage === 'alerts' ? 'text-blue-700' : 'text-gray-700'}`}>
+              Property Alerts
+            </span>
           </button>
-          <button className="w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl group transition-colors">
+          <button 
+            onClick={() => onPageChange('saved')}
+            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
+              ${currentPage === 'saved'
+                ? 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10'
+                : 'hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50'}`}
+          >
             <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md group-hover:shadow-lg transition-all">
               <Bookmark className="w-4 h-4" />
             </div>
-            <span className="text-gray-700">Saved Properties</span>
+            <span className={`${currentPage === 'saved' ? 'text-emerald-700' : 'text-gray-700'}`}>
+              Saved Properties
+            </span>
           </button>
           <button className="w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl group transition-colors">
             <div className="p-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white shadow-md group-hover:shadow-lg transition-all">

@@ -171,7 +171,7 @@ const ChatInterface = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-64 right-0">
+      <div className="fixed bottom-0 left-80 right-0">
         <div className="glass-effect border-t border-white/20">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-4">
             <div className="relative">
