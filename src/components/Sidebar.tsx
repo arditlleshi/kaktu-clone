@@ -1,38 +1,37 @@
-import React, { useState } from 'react';
-import { 
-  MessageSquarePlus, 
-  Zap, 
-  Bell, 
-  Bookmark, 
-  Settings, 
-  Search, 
-  MapPin, 
-  Home, 
-  Building2, 
-  Timer, 
-  History, 
-  Filter,
-  Sparkles,
+import {
+  Bell,
+  Bookmark,
+  Boxes,
+  Building2,
   Cpu,
   Globe,
-  Boxes
-} from 'lucide-react';
+  History,
+  MessageSquarePlus,
+  Search,
+  Settings,
+  Sparkles,
+  Timer,
+  Zap,
+} from "lucide-react";
+import React, { useState } from "react";
 
 interface ChatHistory {
   id: number;
   title: string;
   timestamp: string;
   preview: string;
-  type: 'quantum' | 'neural' | 'standard';
+  type: "quantum" | "neural" | "standard";
 }
 
 interface SidebarProps {
-  onPageChange: (page: 'chat' | 'alerts' | 'saved') => void;
-  currentPage: 'chat' | 'alerts' | 'saved';
+  onPageChange: (page: "chat" | "alerts" | "saved" | "settings") => void;
+  currentPage: "chat" | "alerts" | "saved" | "settings";
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
-  const [activeSection, setActiveSection] = useState<'recent' | 'saved'>('recent');
+  const [activeSection, setActiveSection] = useState<"recent" | "saved">(
+    "recent"
+  );
 
   const recentChats: ChatHistory[] = [
     {
@@ -40,36 +39,44 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
       title: "Smart Penthouses in Downtown",
       timestamp: "2 hours ago",
       preview: "Found 5 properties matching your criteria",
-      type: 'quantum'
+      type: "quantum",
     },
     {
       id: 2,
       title: "AI-Enhanced Smart Homes",
       timestamp: "1 day ago",
       preview: "Curated luxury living spaces",
-      type: 'neural'
+      type: "neural",
     },
     {
       id: 3,
       title: "Modern City Properties",
       timestamp: "2 days ago",
       preview: "Urban lifestyle sanctuaries",
-      type: 'standard'
-    }
+      type: "standard",
+    },
   ];
 
   const quickFilters = [
-    { icon: Globe, text: 'Smart Spaces', color: 'from-violet-600 to-indigo-600' },
-    { icon: Building2, text: 'Modern Homes', color: 'from-cyan-600 to-blue-600' },
-    { icon: Cpu, text: 'Smart Units', color: 'from-emerald-600 to-teal-600' },
-    { icon: Boxes, text: 'New Builds', color: 'from-fuchsia-600 to-pink-600' }
+    {
+      icon: Globe,
+      text: "Smart Spaces",
+      color: "from-violet-600 to-indigo-600",
+    },
+    {
+      icon: Building2,
+      text: "Modern Homes",
+      color: "from-cyan-600 to-blue-600",
+    },
+    { icon: Cpu, text: "Smart Units", color: "from-emerald-600 to-teal-600" },
+    { icon: Boxes, text: "New Builds", color: "from-fuchsia-600 to-pink-600" },
   ];
 
-  const getTypeIcon = (type: ChatHistory['type']) => {
+  const getTypeIcon = (type: ChatHistory["type"]) => {
     switch (type) {
-      case 'quantum':
+      case "quantum":
         return <Sparkles className="w-4 h-4 text-violet-500" />;
-      case 'neural':
+      case "neural":
         return <Cpu className="w-4 h-4 text-blue-500" />;
       default:
         return <History className="w-4 h-4 text-gray-400" />;
@@ -88,13 +95,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
           </span>
         </div>
 
-        <button 
-          onClick={() => onPageChange('chat')}
+        <button
+          onClick={() => onPageChange("chat")}
           className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl shadow-lg transition-all
-            ${currentPage === 'chat' 
-              ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40' 
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-        >
+            ${
+              currentPage === "chat"
+                ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}>
           <MessageSquarePlus className="w-5 h-5" />
           <span className="font-medium">New Search</span>
         </button>
@@ -117,8 +125,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
               <button
                 key={filter.text}
                 className={`flex items-center space-x-2 px-3 py-2.5 text-sm rounded-xl transition-all hover:-translate-y-0.5
-                  bg-gradient-to-r ${filter.color} text-white/90 hover:text-white shadow-md hover:shadow-lg`}
-              >
+                  bg-gradient-to-r ${filter.color} text-white/90 hover:text-white shadow-md hover:shadow-lg`}>
                 <filter.icon className="w-4 h-4" />
                 <span className="font-medium">{filter.text}</span>
               </button>
@@ -128,23 +135,21 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
 
         <div className="flex items-center space-x-2 px-3 mb-4">
           <button
-            onClick={() => setActiveSection('recent')}
+            onClick={() => setActiveSection("recent")}
             className={`flex-1 text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
-              activeSection === 'recent' 
-                ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600' 
-                : 'hover:bg-gray-50 text-gray-600'
-            }`}
-          >
+              activeSection === "recent"
+                ? "bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600"
+                : "hover:bg-gray-50 text-gray-600"
+            }`}>
             Recent
           </button>
           <button
-            onClick={() => setActiveSection('saved')}
+            onClick={() => setActiveSection("saved")}
             className={`flex-1 text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
-              activeSection === 'saved' 
-                ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600' 
-                : 'hover:bg-gray-50 text-gray-600'
-            }`}
-          >
+              activeSection === "saved"
+                ? "bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-indigo-600"
+                : "hover:bg-gray-50 text-gray-600"
+            }`}>
             Saved
           </button>
         </div>
@@ -153,14 +158,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
           {recentChats.map((chat) => (
             <button
               key={chat.id}
-              onClick={() => onPageChange('chat')}
-              className="w-full px-3 py-3 text-left hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl transition-all hover:shadow-sm group"
-            >
+              onClick={() => onPageChange("chat")}
+              className="w-full px-3 py-3 text-left hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl transition-all hover:shadow-sm group">
               <div className="flex items-start space-x-3">
                 <div className="mt-1">{getTypeIcon(chat.type)}</div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-sm text-gray-900 truncate">{chat.title}</h4>
-                  <p className="text-xs text-gray-500 truncate mt-0.5">{chat.preview}</p>
+                  <h4 className="font-medium text-sm text-gray-900 truncate">
+                    {chat.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 truncate mt-0.5">
+                    {chat.preview}
+                  </p>
                   <p className="text-xs text-gray-400 mt-1 flex items-center space-x-1">
                     <Timer className="w-3 h-3" />
                     <span>{chat.timestamp}</span>
@@ -181,39 +189,61 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage }) => {
               PRO
             </span>
           </button>
-          <button 
-            onClick={() => onPageChange('alerts')}
+          <button
+            onClick={() => onPageChange("alerts")}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
-              ${currentPage === 'alerts'
-                ? 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10'
-                : 'hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50'}`}
-          >
+              ${
+                currentPage === "alerts"
+                  ? "bg-gradient-to-r from-blue-500/10 to-cyan-500/10"
+                  : "hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50"
+              }`}>
             <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md group-hover:shadow-lg transition-all">
               <Bell className="w-4 h-4" />
             </div>
-            <span className={`${currentPage === 'alerts' ? 'text-blue-700' : 'text-gray-700'}`}>
+            <span
+              className={`${
+                currentPage === "alerts" ? "text-blue-700" : "text-gray-700"
+              }`}>
               Property Alerts
             </span>
           </button>
-          <button 
-            onClick={() => onPageChange('saved')}
+          <button
+            onClick={() => onPageChange("saved")}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
-              ${currentPage === 'saved'
-                ? 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10'
-                : 'hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50'}`}
-          >
+              ${
+                currentPage === "saved"
+                  ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10"
+                  : "hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50"
+              }`}>
             <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md group-hover:shadow-lg transition-all">
               <Bookmark className="w-4 h-4" />
             </div>
-            <span className={`${currentPage === 'saved' ? 'text-emerald-700' : 'text-gray-700'}`}>
+            <span
+              className={`${
+                currentPage === "saved" ? "text-emerald-700" : "text-gray-700"
+              }`}>
               Saved Properties
             </span>
           </button>
-          <button className="w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl group transition-colors">
+          <button
+            onClick={() => onPageChange("settings")}
+            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
+              ${
+                currentPage === "settings"
+                  ? "bg-gradient-to-r from-fuchsia-500/10 to-pink-500/10"
+                  : "hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50"
+              }`}>
             <div className="p-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white shadow-md group-hover:shadow-lg transition-all">
               <Settings className="w-4 h-4" />
             </div>
-            <span className="text-gray-700">Settings</span>
+            <span
+              className={`${
+                currentPage === "settings"
+                  ? "text-fuchsia-700"
+                  : "text-gray-700"
+              }`}>
+              Settings
+            </span>
           </button>
         </div>
       </div>
