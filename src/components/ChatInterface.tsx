@@ -1,47 +1,49 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Image, Sparkles, Bot, Zap, Brain } from 'lucide-react';
-import PropertyMessage from './PropertyMessage';
-import PropertySkeleton from './PropertySkeleton';
-import { Property } from '../types';
+import { Bot, Brain, Image, Sparkles, Zap } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Property } from "../types";
+import PropertyMessage from "./PropertyMessage";
+import PropertySkeleton from "./PropertySkeleton";
 
 const initialProperties: Property[] = [
   {
     id: 1,
-    price: 715000.00,
+    price: 715000.0,
     address: "Quantum Heights, Neo District",
     rooms: 6,
     baths: 2,
     sqft: 53.08,
     agency: "FUTURE HOMES AI",
     timestamp: "1 hour ago",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&auto=format",
     viewed: true,
-    coordinates: [41.3275, 19.8187]
+    coordinates: [41.3275, 19.8187],
   },
   {
     id: 2,
-    price: 825000.00,
+    price: 825000.0,
     address: "Skyline Nexus, Cloud Zone",
     rooms: 4,
     baths: 1,
     sqft: 47,
     agency: "NEURAL ESTATES",
     timestamp: "2 weeks ago",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&auto=format",
-    coordinates: [41.3275, 19.8187]
-  }
+    image:
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&auto=format",
+    coordinates: [41.3275, 19.8187],
+  },
 ];
 
 const aiResponses = [
   "🔮 Initializing quantum property search...",
   "🧠 Neural networks analyzing market patterns...",
   "⚡ Scanning dimensional matrices for optimal matches...",
-  "🌌 Traversing the real estate multiverse..."
+  "🌌 Traversing the real estate multiverse...",
 ];
 
 interface Message {
   id: number;
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
   content: string;
   properties?: Property[];
   loading?: boolean;
@@ -51,16 +53,17 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      type: 'assistant',
-      content: '🌟 Welcome to KaKtu AI! I\'m your quantum-powered real estate companion, designed to find your perfect sanctuary across dimensions. How shall we begin our journey today?',
-    }
+      type: "assistant",
+      content:
+        "🌟 Welcome to KaKtu AI! I'm your quantum-powered real estate companion, designed to find your perfect sanctuary across dimensions. How shall we begin our journey today?",
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loadingIndex, setLoadingIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -68,7 +71,7 @@ const ChatInterface = () => {
   }, [messages]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     if (messages[messages.length - 1]?.loading) {
       interval = setInterval(() => {
         setLoadingIndex((prev) => (prev + 1) % aiResponses.length);
@@ -83,27 +86,28 @@ const ChatInterface = () => {
 
     const userMessage: Message = {
       id: messages.length + 1,
-      type: 'user',
+      type: "user",
       content: input,
     };
 
     const loadingMessage: Message = {
       id: messages.length + 2,
-      type: 'assistant',
+      type: "assistant",
       content: aiResponses[0],
       loading: true,
     };
 
     setMessages([...messages, userMessage, loadingMessage]);
-    setInput('');
+    setInput("");
 
     setTimeout(() => {
-      setMessages(prev => {
+      setMessages((prev) => {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = {
           id: messages.length + 2,
-          type: 'assistant',
-          content: '✨ Analysis complete! I\'ve discovered these perfect spaces that match your criteria:',
+          type: "assistant",
+          content:
+            "✨ Analysis complete! I've discovered these perfect spaces that match your criteria:",
           properties: initialProperties,
         };
         return newMessages;
@@ -119,20 +123,20 @@ const ChatInterface = () => {
             <div
               key={message.id}
               className={`px-4 py-6 ${
-                message.type === 'assistant' 
-                  ? 'bg-gradient-to-r from-violet-50/50 to-indigo-50/50 backdrop-blur-sm' 
-                  : 'bg-white/70'
-              }`}
-            >
+                message.type === "assistant"
+                  ? "bg-gradient-to-r from-violet-50/50 to-indigo-50/50 backdrop-blur-sm"
+                  : "bg-white/70"
+              }`}>
               <div ref={messagesEndRef} />
-              
+
               <div className="max-w-3xl mx-auto flex space-x-6">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                  message.type === 'assistant' 
-                    ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white animate-pulse-slow shadow-lg shadow-indigo-500/25'
-                    : 'bg-gradient-to-r from-gray-200 to-gray-300'
-                }`}>
-                  {message.type === 'assistant' ? (
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+                    message.type === "assistant"
+                      ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white animate-pulse-slow shadow-lg shadow-indigo-500/25"
+                      : "bg-gradient-to-r from-gray-200 to-gray-300"
+                  }`}>
+                  {message.type === "assistant" ? (
                     message.loading ? (
                       <Brain className="w-7 h-7 animate-float" />
                     ) : (
@@ -148,7 +152,9 @@ const ChatInterface = () => {
                       {aiResponses[loadingIndex]}
                     </p>
                   ) : (
-                    <p className="text-gray-800 leading-relaxed">{message.content}</p>
+                    <p className="text-gray-800 leading-relaxed">
+                      {message.content}
+                    </p>
                   )}
                   {message.loading ? (
                     <div className="grid gap-4">
@@ -159,7 +165,10 @@ const ChatInterface = () => {
                     message.properties && (
                       <div className="grid gap-4">
                         {message.properties.map((property) => (
-                          <PropertyMessage key={property.id} property={property} />
+                          <PropertyMessage
+                            key={property.id}
+                            property={property}
+                          />
                         ))}
                       </div>
                     )
@@ -183,19 +192,17 @@ const ChatInterface = () => {
                 className="w-full p-4 pr-24 bg-white/50 backdrop-blur-lg border border-indigo-100 rounded-2xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 placeholder-gray-400 shadow-lg shadow-indigo-500/5"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-2">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="p-2 text-indigo-400 hover:text-indigo-600 transition-colors hover:bg-indigo-50 rounded-xl"
-                  title="Upload property images"
-                >
+                  title="Upload property images">
                   <Image className="w-5 h-5" />
                 </button>
                 <button
                   type="submit"
                   disabled={!input.trim()}
                   className="p-2 text-indigo-400 hover:text-indigo-600 transition-colors hover:bg-indigo-50 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Start search"
-                >
+                  title="Start search">
                   <Sparkles className="w-5 h-5" />
                 </button>
               </div>
