@@ -4,11 +4,15 @@ import { Property } from '../types';
 
 interface PropertyMessageProps {
   property: Property;
+  onPropertyClick?: (id: number) => void;
 }
 
-const PropertyMessage: React.FC<PropertyMessageProps> = ({ property }) => {
+const PropertyMessage: React.FC<PropertyMessageProps> = ({ property, onPropertyClick }) => {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-coral-500 transition-colors">
+    <div 
+      className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-coral-500 transition-colors cursor-pointer"
+      onClick={() => onPropertyClick?.(property.id)}
+    >
       <div className="flex">
         {property.image ? (
           <div className="relative w-48 h-48">
@@ -38,7 +42,13 @@ const PropertyMessage: React.FC<PropertyMessageProps> = ({ property }) => {
                 <p>{property.address}</p>
               </div>
             </div>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
+            <button 
+              className="p-2 hover:bg-gray-100 rounded-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open('#', '_blank');
+              }}
+            >
               <ExternalLink className="w-5 h-5" />
             </button>
           </div>
