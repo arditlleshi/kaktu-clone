@@ -13,7 +13,11 @@ interface Alert {
   matches: number;
 }
 
-const PropertyAlerts = () => {
+interface PropertyAlertsProps {
+  onAlertClick: (alertId: number) => void;
+}
+
+const PropertyAlerts: React.FC<PropertyAlertsProps> = ({ onAlertClick }) => {
   const [alerts] = useState<Alert[]>([
     {
       id: 1,
@@ -46,28 +50,6 @@ const PropertyAlerts = () => {
       frequency: "Weekly",
       active: false,
       matches: 5
-    },
-    {
-      id: 4,
-      name: "Condo Alert",
-      location: "Williamsburg",
-      priceRange: "$600k - $800k",
-      propertyType: "Condo",
-      frequency: "Instant",
-      active: true,
-      lastNotified: "1 hour ago",
-      matches: 2
-    },
-    {
-      id: 5,
-      name: "Studio Alert",
-      location: "Greenwich Village",
-      priceRange: "$300k - $500k",
-      propertyType: "Studio",
-      frequency: "Instant",
-      active: true,
-      lastNotified: "3 hours ago",
-      matches: 1
     }
   ]);
 
@@ -169,7 +151,10 @@ const PropertyAlerts = () => {
 
               {alert.matches > 0 && (
                 <div className="mt-4 pt-4 border-t border-gray-100">
-                  <button className="w-full group bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 rounded-xl p-4 flex items-center justify-between transition-all">
+                  <button 
+                    onClick={() => onAlertClick(alert.id)}
+                    className="w-full group bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 rounded-xl p-4 flex items-center justify-between transition-all"
+                  >
                     <div>
                       <h4 className="font-medium">View Latest Matches</h4>
                       <p className="text-sm text-gray-500">

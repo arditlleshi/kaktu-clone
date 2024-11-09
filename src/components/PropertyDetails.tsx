@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft, MapPin, Bed, Bath, Square, Share2, Bookmark, Calendar, Building2, Sparkles, Shield } from 'lucide-react';
 import { Property } from '../types';
+import PropertyMessage from './PropertyMessage';
 
 interface PropertyDetailsProps {
   propertyId: number;
@@ -20,6 +21,34 @@ const getPropertyById = (id: number): Property => ({
   image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format",
   coordinates: [40.7128, -74.0060]
 });
+
+// In a real app, this would be fetched based on the current property
+const similarProperties: Property[] = [
+  {
+    id: 101,
+    price: 895000,
+    address: "Neo Towers, 160 York Street",
+    rooms: 3,
+    baths: 2,
+    sqft: 1150,
+    agency: "FUTURE HOMES AI",
+    timestamp: "Listed 1 day ago",
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=500&auto=format",
+    coordinates: [40.7128, -74.0060]
+  },
+  {
+    id: 102,
+    price: 950000,
+    address: "Sky Gardens, 200 York Street",
+    rooms: 3,
+    baths: 2.5,
+    sqft: 1300,
+    agency: "NEURAL ESTATES",
+    timestamp: "Listed 3 days ago",
+    image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=500&auto=format",
+    coordinates: [40.7128, -74.0060]
+  }
+];
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack }) => {
   const property = getPropertyById(propertyId);
@@ -105,6 +134,18 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack })
                   gourmet kitchen boasts high-end appliances and custom cabinetry, while floor-to-ceiling 
                   windows flood the space with natural light and offer breathtaking city views.
                 </p>
+              </div>
+            </div>
+
+            <div className="glass-effect rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-6">Similar Properties</h3>
+              <div className="space-y-4">
+                {similarProperties.map(property => (
+                  <PropertyMessage 
+                    key={property.id} 
+                    property={property}
+                  />
+                ))}
               </div>
             </div>
           </div>
