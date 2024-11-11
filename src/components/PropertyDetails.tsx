@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, MapPin, Bed, Bath, Square, Share2, Bookmark, Calendar, Building2, Sparkles, Shield } from 'lucide-react';
 import { Property } from '../types';
 import PropertyMessage from './PropertyMessage';
+import ImageCarousel from './ImageCarousel';
 
 interface PropertyDetailsProps {
   propertyId: number;
   onBack: () => void;
 }
 
-// In a real app, this would come from an API
-const getPropertyById = (id: number): Property => ({
+const getPropertyById = (id: number): Property & { images: string[] } => ({
   id,
   price: 925000,
   address: "Quantum Heights, 180 York Street",
@@ -19,10 +19,15 @@ const getPropertyById = (id: number): Property => ({
   agency: "FUTURE HOMES AI",
   timestamp: "Listed 2 days ago",
   image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format",
-  coordinates: [40.7128, -74.0060]
+  coordinates: [40.7128, -74.0060],
+  images: [
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&auto=format",
+    "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200&auto=format",
+    "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&auto=format"
+  ]
 });
 
-// In a real app, this would be fetched based on the current property
 const similarProperties: Property[] = [
   {
     id: 101,
@@ -52,6 +57,12 @@ const similarProperties: Property[] = [
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack }) => {
   const property = getPropertyById(propertyId);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    // You could add a toast notification here
+  };
 
   return (
     <div className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-50 to-white">
@@ -68,13 +79,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack })
 
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-2 space-y-6">
-            <div className="glass-effect rounded-2xl overflow-hidden">
-              <img
-                src={property.image}
-                alt={property.address}
-                className="w-full h-[500px] object-cover"
-              />
-            </div>
+            <ImageCarousel images={property.images} alt={property.address} />
 
             <div className="glass-effect rounded-2xl p-6">
               <div className="flex justify-between items-start mb-6">
@@ -86,10 +91,18 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack })
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+                  <button 
+                    onClick={handleShare}
+                    className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+                  >
                     <Share2 className="w-5 h-5" />
                   </button>
-                  <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+                  <button 
+                    onClick={() => setIsSaved(!isSaved)}
+                    className={`p-3 rounded-xl transition-colors ${
+                      isSaved ? 'bg-violet-100 text-violet-600' : 'hover:bg-gray-100'
+                    }`}
+                  >
                     <Bookmark className="w-5 h-5" />
                   </button>
                 </div>
@@ -187,7 +200,6 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack })
 
             <div className="glass-effect rounded-2xl overflow-hidden">
               <div className="h-[300px] bg-gray-100">
-                {/* Map would be integrated here */}
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                   Interactive Map
                 </div>

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Image, Sparkles, Bot, Zap, Brain } from 'lucide-react';
+import { Send, Image, Sparkles, Bot, Zap, Brain, Bell } from 'lucide-react';
 import PropertyMessage from './PropertyMessage';
 import PropertySkeleton from './PropertySkeleton';
+import CreateAlertModal from './CreateAlertModal';
 import { Property } from '../types';
 
 const initialProperties: Property[] = [
@@ -45,6 +46,8 @@ interface Message {
   content: string;
   properties?: Property[];
   loading?: boolean;
+  isSearchResult?: boolean;
+  searchCriteria?: string;
 }
 
 interface ChatInterfaceProps {
@@ -57,10 +60,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
       id: 1,
       type: 'assistant',
       content: '🌟 Welcome to KaKtu AI! I\'m your quantum-powered real estate companion, designed to find your perfect sanctuary across dimensions. How shall we begin our journey today?',
+      isSearchResult: false
     }
   ]);
   const [input, setInput] = useState('');
   const [loadingIndex, setLoadingIndex] = useState(0);
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [selectedSearchCriteria, setSelectedSearchCriteria] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -72,7 +78,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
   }, [messages]);
 
   useEffect(() => {
-    let interval: number;
+    let interval: NodeJS.Timeout;
     if (messages[messages.length - 1]?.loading) {
       interval = setInterval(() => {
         setLoadingIndex((prev) => (prev + 1) % aiResponses.length);
@@ -89,6 +95,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
       id: messages.length + 1,
       type: 'user',
       content: input,
+      isSearchResult: false
     };
 
     const loadingMessage: Message = {
@@ -96,9 +103,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
       type: 'assistant',
       content: aiResponses[0],
       loading: true,
+      isSearchResult: false
     };
 
     setMessages([...messages, userMessage, loadingMessage]);
+    const searchCriteria = input;
     setInput('');
 
     setTimeout(() => {
@@ -109,10 +118,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
           type: 'assistant',
           content: '✨ Analysis complete! I\'ve discovered these perfect spaces that match your criteria:',
           properties: initialProperties,
+          isSearchResult: true,
+          searchCriteria
         };
         return newMessages;
       });
     }, 4500);
+  };
+
+  const createAlert = (message: Message) => {
+    if (message.searchCriteria) {
+      setSelectedSearchCriteria(message.searchCriteria);
+      setShowAlertModal(true);
+    }
+  };
+
+  const handleAlertSubmit = (data: any) => {
+    console.log('Creating alert with data:', data);
+    // Here you would typically send this to your backend
+    setShowAlertModal(false);
   };
 
   return (
@@ -128,8 +152,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
                   : 'bg-white/70'
               }`}
             >
-              <div ref={messagesEndRef} />
-              
               <div className="max-w-3xl mx-auto flex space-x-6">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
                   message.type === 'assistant' 
@@ -147,13 +169,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
                   )}
                 </div>
                 <div className="flex-1 space-y-4">
-                  {message.loading ? (
-                    <p className="text-gray-800 leading-relaxed animate-pulse">
-                      {aiResponses[loadingIndex]}
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-800 leading-relaxed">
+                      {message.loading ? aiResponses[loadingIndex] : message.content}
                     </p>
-                  ) : (
-                    <p className="text-gray-800 leading-relaxed">{message.content}</p>
-                  )}
+                    {message.type === 'assistant' && !message.loading && message.isSearchResult && (
+                      <button
+                        onClick={() => createAlert(message)}
+                        className="flex items-center space-x-2 px-3 py-1.5 bg-violet-100 text-violet-600 rounded-lg hover:bg-violet-200 transition-colors"
+                      >
+                        <Bell className="w-4 h-4" />
+                        <span className="text-sm text-nowrap text-ellipsis">Create Alert</span>
+                      </button>
+                    )}
+                  </div>
                   {message.loading ? (
                     <div className="grid gap-4">
                       <PropertySkeleton />
@@ -176,6 +205,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
               </div>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
@@ -214,6 +244,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
           </form>
         </div>
       </div>
+
+      {showAlertModal && (
+        <CreateAlertModal
+          initialMessage={selectedSearchCriteria}
+          onClose={() => setShowAlertModal(false)}
+          onSubmit={handleAlertSubmit}
+        />
+      )}
     </div>
   );
 };

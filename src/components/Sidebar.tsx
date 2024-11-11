@@ -173,18 +173,23 @@ const Sidebar: React.FC<SidebarProps> = ({ onPageChange, currentPage, onProClick
         </div>
 
         <div className="space-y-1 mb-4">
-          <button 
-            onClick={onProClick}
-            className="w-full flex items-center space-x-3 px-3 py-2.5 hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50 rounded-xl group transition-colors"
-          >
-            <div className="p-2 rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 text-white shadow-md group-hover:shadow-lg transition-all">
-              <Zap className="w-4 h-4" />
-            </div>
-            <span className="text-gray-700">KaKtu Pro</span>
-            <span className="ml-auto text-xs bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-2 py-1 rounded-lg shadow-sm">
-              PRO
-            </span>
-          </button>
+        <button 
+          onClick={onProClick}
+          className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
+            ${currentPage === 'pro'
+              ? 'bg-gradient-to-r from-violet-500/10 to-indigo-500/10'
+              : 'hover:bg-gradient-to-r from-violet-50/50 to-indigo-50/50'}`}
+        >
+          <div className="p-2 rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 text-white shadow-md group-hover:shadow-lg transition-all">
+            <Zap className="w-4 h-4" />
+          </div>
+          <span className={`${currentPage === 'pro' ? 'text-violet-700' : 'text-gray-700'}`}>
+            KaKtu Pro
+          </span>
+          <span className="ml-auto text-xs bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-2 py-1 rounded-lg shadow-sm">
+            PRO
+          </span>
+        </button>
           <button 
             onClick={() => onPageChange('alerts')}
             className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl group transition-colors
