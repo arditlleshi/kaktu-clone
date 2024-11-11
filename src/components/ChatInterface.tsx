@@ -78,7 +78,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onPropertyClick }) => {
   }, [messages]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     if (messages[messages.length - 1]?.loading) {
       interval = setInterval(() => {
         setLoadingIndex((prev) => (prev + 1) % aiResponses.length);
