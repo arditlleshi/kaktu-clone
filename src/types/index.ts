@@ -18,3 +18,14 @@ export interface Filter {
   size: string;
   type: string;
 }
+
+export interface AIValuation {
+  currentValue: number;
+  predictedValue: number;
+  confidence: number;
+  rentalYield: number;
+  appreciation: number;
+  investmentScore: number;
+  marketTrend: 'up' | 'down' | 'stable';
+  comparables: number;
+}

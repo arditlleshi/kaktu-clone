@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Bed, Bath, Square, Share2, Bookmark, Calendar, Building2, Sparkles, Shield } from 'lucide-react';
+import { ArrowLeft, MapPin, Bed, Bath, Square, Share2, Bookmark, Calendar, Building2, Sparkles, Shield, TrendingUp, ChevronDown, DollarSign, PiggyBank, LineChart, Calculator } from 'lucide-react';
 import { Property } from '../types';
 import PropertyMessage from './PropertyMessage';
 import ImageCarousel from './ImageCarousel';
@@ -9,7 +9,19 @@ interface PropertyDetailsProps {
   onBack: () => void;
 }
 
-const getPropertyById = (id: number): Property & { images: string[] } => ({
+const getPropertyById = (id: number): Property & { 
+  images: string[];
+  aiValuation: {
+    currentValue: number;
+    predictedValue: number;
+    confidence: number;
+    rentalYield: number;
+    appreciation: number;
+    investmentScore: number;
+    marketTrend: 'up' | 'down' | 'stable';
+    comparables: number;
+  };
+} => ({
   id,
   price: 925000,
   address: "Quantum Heights, 180 York Street",
@@ -24,8 +36,18 @@ const getPropertyById = (id: number): Property & { images: string[] } => ({
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&auto=format",
     "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200&auto=format",
-    "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&auto=format"
-  ]
+    "https://images.unsplash.com/photo-1600573472550-8090b0e0745e?w=1200&auto=format"
+  ],
+  aiValuation: {
+    currentValue: 925000,
+    predictedValue: 1025000,
+    confidence: 92,
+    rentalYield: 4.8,
+    appreciation: 10.8,
+    investmentScore: 8.5,
+    marketTrend: 'up',
+    comparables: 15
+  }
 });
 
 const similarProperties: Property[] = [
@@ -58,10 +80,24 @@ const similarProperties: Property[] = [
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack }) => {
   const property = getPropertyById(propertyId);
   const [isSaved, setIsSaved] = useState(false);
+  const [showValuationDetails, setShowValuationDetails] = useState(false);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    // You could add a toast notification here
+  };
+
+  const getInvestmentScoreColor = (score: number) => {
+    if (score >= 8) return 'text-emerald-500';
+    if (score >= 6) return 'text-amber-500';
+    return 'text-red-500';
+  };
+
+  const getMarketTrendColor = (trend: 'up' | 'down' | 'stable') => {
+    switch (trend) {
+      case 'up': return 'text-emerald-500';
+      case 'down': return 'text-red-500';
+      default: return 'text-amber-500';
+    }
   };
 
   return (
@@ -148,6 +184,100 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ propertyId, onBack })
                   windows flood the space with natural light and offer breathtaking city views.
                 </p>
               </div>
+            </div>
+
+            {/* New AI Valuation Section */}
+            <div className="glass-effect rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 flex items-center justify-center">
+                    <Calculator className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">AI Property Valuation</h3>
+                    <p className="text-sm text-gray-500">Powered by quantum analytics</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500">
+                    {property.aiValuation.confidence}% confidence
+                  </span>
+                  <button
+                    onClick={() => setShowValuationDetails(!showValuationDetails)}
+                    className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+                  >
+                    <ChevronDown className={`w-5 h-5 transform transition-transform ${showValuationDetails ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6 mb-6">
+                <div className="p-4 bg-violet-50 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <DollarSign className="w-5 h-5 text-violet-600" />
+                      <span className="font-medium text-violet-600">Current Value</span>
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold">${property.aiValuation.currentValue.toLocaleString()}</p>
+                </div>
+
+                <div className="p-4 bg-emerald-50 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="w-5 h-5 text-emerald-600" />
+                      <span className="font-medium text-emerald-600">Predicted Value</span>
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold">${property.aiValuation.predictedValue.toLocaleString()}</p>
+                  <p className="text-sm text-emerald-600">+{property.aiValuation.appreciation}% in 12 months</p>
+                </div>
+
+                <div className="p-4 bg-blue-50 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <PiggyBank className="w-5 h-5 text-blue-600" />
+                      <span className="font-medium text-blue-600">Rental Yield</span>
+                    </div>
+                  </div>
+                  <p className="text-2xl font-bold">{property.aiValuation.rentalYield}%</p>
+                  <p className="text-sm text-blue-600">Annual return</p>
+                </div>
+              </div>
+
+              {showValuationDetails && (
+                <div className="space-y-4 mt-6 pt-6 border-t border-gray-100">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-600 mb-2">Investment Score</h4>
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-2xl font-bold ${getInvestmentScoreColor(property.aiValuation.investmentScore)}`}>
+                          {property.aiValuation.investmentScore}/10
+                        </span>
+                        <LineChart className="w-5 h-5 text-gray-400" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-600 mb-2">Market Trend</h4>
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-2xl font-bold capitalize ${getMarketTrendColor(property.aiValuation.marketTrend)}`}>
+                          {property.aiValuation.marketTrend}
+                        </span>
+                        <TrendingUp className={`w-5 h-5 ${getMarketTrendColor(property.aiValuation.marketTrend)}`} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-2">Analysis Based On</h4>
+                    <p className="text-gray-500">
+                      Valuation computed using {property.aiValuation.comparables} comparable properties in the area,
+                      historical market data, and AI-powered predictive analytics.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="glass-effect rounded-2xl p-6">
